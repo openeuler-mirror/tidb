@@ -1,6 +1,6 @@
 Name:           tidb
 Version:        4.0.14
-Release:        1
+Release:        2
 Summary:        TiDB is a distributed NewSQL database compatible with MySQL protocol
 
 License:        QL and STRUTIL
@@ -40,6 +40,23 @@ cp %{SOURCE2} %{buildroot}%{_sysconfdir}/tidb
 mkdir -p %{buildroot}%{_unitdir}
 cp %{SOURCE1} %{buildroot}%{_unitdir}
 
+%pre
+# Add the "mysql" user
+getent group  mysql >/dev/null || groupadd -r -g 27 mysql
+getent passwd mysql >/dev/null || useradd -r -u 27 -g 27 -s /sbin/nologin -d /var/lib/mysql mysql
+exit 0
+
+%post
+%systemd_post tidb-server.service
+/usr/bin/mkdir -p /var/lib/mysql
+/usr/bin/chown -R mysql:mysql /var/lib/mysql
+
+%preun
+%systemd_preun tidb-server.service
+
+%postun
+%systemd_postun_with_restart tidb-server.service
+
 %files
 %{_bindir}/tidb-server
 %{_unitdir}/tidb-server.service
@@ -51,5 +68,8 @@ cp %{SOURCE1} %{buildroot}%{_unitdir}
 %license LICENSE
 
 %changelog
-* Fri Aug 20 2021 huanghaitao <huanghaitao8@huawei.com>
+* Thu Sep 02 2021 sunguoshuai <sunguoshuai@huawei.com> - 4.0.14-2
+- Fix tidb-server.service start failure
+
+* Fri Aug 20 2021 huanghaitao <huanghaitao8@huawei.com> - 4.0.14-1
 - Package init
