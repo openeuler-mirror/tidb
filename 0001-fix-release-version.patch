@@ -1,0 +1,42 @@
+From 3c62ba67a1cbb55636567909f6389e89fe6db7e8 Mon Sep 17 00:00:00 2001
+From: baizg1107 <preloyalwhite@163.com>
+Date: Mon, 11 Oct 2021 11:04:49 +0800
+Subject: [PATCH] fix release version
+
+---
+ Makefile | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index c36dc47..24ec57e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -32,6 +32,10 @@ GOTEST          := $(GO) test -p $(P)
+ OVERALLS        := GO111MODULE=on overalls
+ STATICCHECK     := GO111MODULE=on staticcheck
+ TIDB_EDITION    ?= Community
++RELEASE_VERSION ?= v4.0.14
++TIDB_BUILDTS    ?= None
++TIDB_GITHASH    ?= None
++TIDB_GITBRANCH  ?= None
+ 
+ # Ensure TIDB_EDITION is set to Community or Enterprise before running build process.
+ ifneq "$(TIDB_EDITION)" "Community"
+@@ -51,10 +55,10 @@ FILES     := $$(find $$($(PACKAGE_DIRECTORIES)) -name "*.go")
+ FAILPOINT_ENABLE  := $$(find $$PWD/ -type d | grep -vE "(\.git|tools)" | xargs tools/bin/failpoint-ctl enable)
+ FAILPOINT_DISABLE := $$(find $$PWD/ -type d | grep -vE "(\.git|tools)" | xargs tools/bin/failpoint-ctl disable)
+ 
+-LDFLAGS += -X "github.com/pingcap/parser/mysql.TiDBReleaseVersion=$(shell git describe --tags --dirty --always)"
+-LDFLAGS += -X "github.com/pingcap/tidb/util/versioninfo.TiDBBuildTS=$(shell date -u '+%Y-%m-%d %I:%M:%S')"
+-LDFLAGS += -X "github.com/pingcap/tidb/util/versioninfo.TiDBGitHash=$(shell git rev-parse HEAD)"
+-LDFLAGS += -X "github.com/pingcap/tidb/util/versioninfo.TiDBGitBranch=$(shell git rev-parse --abbrev-ref HEAD)"
++LDFLAGS += -X "github.com/pingcap/parser/mysql.TiDBReleaseVersion=$(RELEASE_VERSION)"
++LDFLAGS += -X "github.com/pingcap/tidb/util/versioninfo.TiDBBuildTS=$(TIDB_BUILDTS)"
++LDFLAGS += -X "github.com/pingcap/tidb/util/versioninfo.TiDBGitHash=$(TIDB_GITHASH)"
++LDFLAGS += -X "github.com/pingcap/tidb/util/versioninfo.TiDBGitBranch=$(TIDB_GITBRANCH)"
+ LDFLAGS += -X "github.com/pingcap/tidb/util/versioninfo.TiDBEdition=$(TIDB_EDITION)"
+ 
+ TEST_LDFLAGS =  -X "github.com/pingcap/tidb/config.checkBeforeDropLDFlag=1"
+-- 
+2.27.0
+
