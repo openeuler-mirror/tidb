@@ -1,6 +1,6 @@
 Name:           tidb
 Version:        4.0.14
-Release:        2
+Release:        3
 Summary:        TiDB is a distributed NewSQL database compatible with MySQL protocol
 
 License:        QL and STRUTIL
@@ -11,6 +11,7 @@ Source2:        tidb-server.toml
 #Go mod for non-extranet environments
 Source3:        vendor.tar.gz
 Patch0:         Set-GOFLAG-to-go-mod-vendor.patch
+Patch1:		0001-fix-release-version.patch
 BuildRequires:  golang >= 1.10.0
 Requires(pre):  shadow-utils
 Requires(post): systemd
@@ -68,6 +69,9 @@ exit 0
 %license LICENSE
 
 %changelog
+* Mon Oct 11 2021 baizhonggui <baizhonggui@huawei.com> - 4.0.14-3
+- Fix commond tidb-server -V 'Release Version' not displayed
+
 * Thu Sep 02 2021 sunguoshuai <sunguoshuai@huawei.com> - 4.0.14-2
 - Fix tidb-server.service start failure
 
