@@ -1,6 +1,6 @@
 Name:           tidb
 Version:        4.0.14
-Release:        3
+Release:        4
 Summary:        TiDB is a distributed NewSQL database compatible with MySQL protocol
 
 License:        QL and STRUTIL
@@ -24,6 +24,9 @@ TiDB is a distributed NewSQL database compatible with MySQL protocol
 tar xvf %{SOURCE3} -C .
 
 %build
+%if "%toolchain" == "clang"
+	export LDFLAGS=
+%endif
 %make_build
 
 %install
@@ -69,6 +72,9 @@ exit 0
 %license LICENSE
 
 %changelog
+* Tue Jun 27 2023 yoo <sunyuechi@iscas.ac.cn> - 4.0.14-4
+- fix clang build error
+
 * Mon Oct 11 2021 baizhonggui <baizhonggui@huawei.com> - 4.0.14-3
 - Fix commond tidb-server -V 'Release Version' not displayed
 
